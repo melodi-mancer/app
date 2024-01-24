@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/app/static/css/main.131e1f3b.css",
-    "main.js": "/app/static/js/main.fc7876b9.js",
+    "main.js": "/app/static/js/main.fa6f0563.js",
     "static/media/melodimancer-logo.svg": "/app/static/media/melodimancer-logo.a3531246c242fc459fd4.svg",
     "index.html": "/app/index.html",
     "static/media/github-mark-white.svg": "/app/static/media/github-mark-white.97ed8e7eef60d61ca469.svg",
     "main.131e1f3b.css.map": "/app/static/css/main.131e1f3b.css.map",
-    "main.fc7876b9.js.map": "/app/static/js/main.fc7876b9.js.map"
+    "main.fa6f0563.js.map": "/app/static/js/main.fa6f0563.js.map"
   },
   "entrypoints": [
     "static/css/main.131e1f3b.css",
-    "static/js/main.fc7876b9.js"
+    "static/js/main.fa6f0563.js"
   ]
 }
