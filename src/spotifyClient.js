@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHelpers from "./authHelpers";
 
-const spotifyHelpers = {
+const spotifyClient = {
   searchArtist: async function (val) {
     let code = authHelpers.getCookie();
     let artists = [];
@@ -48,19 +48,40 @@ const spotifyHelpers = {
     document.cookie = "selection=;max-age=0;samesite=lax;Secure";
     await this.formattedDatabyArtists(data);
   },
-  databyAllTimeTopTracks: async function (range) {
+  getAllUserTopTracks: async function (timeRange) {
     let code = authHelpers.getCookie();
-    let tracks = await this.getUserTopTracks(code, range);
-    let seed = await this.getTrackSeed(tracks);
-    let data = await this.getbyTracksWithSeed(code, seed);
-    await this.formattedDatabyTracks(data);
+    let tracks1 = (await this.getUserTopItems("tracks", code, timeRange, 49, 0))[0].items;
+    let tracks2 = (await this.getUserTopItems("tracks", code, timeRange, 50, 49))[0].items;
+
+    return tracks1.concat(tracks2);
+  },
+  getUserTopTracksAudioFeatures: async function(timeRange) {
+    let code = authHelpers.getCookie();
+
+    // Get the 99 top tracks for the current user
+    let tracks1 = (await this.getUserTopItems("tracks", code, timeRange, 49, 0))[0].items;
+    let tracks2 = (await this.getUserTopItems("tracks", code, timeRange, 50, 49))[0].items;
+    let tracks = tracks1.concat(tracks2);
+
+    // Get the audio features
+    let trackIds = tracks.map((t) => t.id);
+    let audioFeatures = await this.getSeveralTracksAudioFeatures(code, trackIds);
+
+    return audioFeatures[0].audio_features;
   },
   databyAllTimeTopArtists: async function (range) {
     let code = authHelpers.getCookie();
-    let artists = await this.getUserTopArtists(code, range);
+    let artists = await this.getUserTopItems("artists", code, range, 5);
     let seed = await this.getArtistSeed(artists);
     let data = await this.getbyArtistsWithSeed(code, seed);
     await this.formattedDatabyArtists(data);
+  },
+  databyAllTimeTopTracks: async function (range) {
+    let code = authHelpers.getCookie();
+    let artists = await this.getUserTopItems("tracks", code, range, 5);
+    let seed = await this.getTrackSeed(artists);
+    let data = await this.getbyTracksWithSeed(code, seed);
+    await this.formattedDatabyTracks(data);
   },
   formattedDatabyTracks: async function (data) {
     let result = {
@@ -92,12 +113,17 @@ const spotifyHelpers = {
     });
     return artistSeed;
   },
-  getUserTopTracks: async function (code, range) {
+  getUserTopItems: async function (type, code, timeRange, limit = 20, offset = 0) {
     let result = [];
     await axios({
       method: "GET",
       url:
-        "https://api.spotify.com/v1/me/top/tracks?limit=5&time_range=" + range,
+        `https://api.spotify.com/v1/me/top/${type}`,
+      params: {
+        time_range: timeRange,
+        limit: limit,
+        offset: offset
+      },
       headers: {
         Authorization: "Bearer " + code,
         "Content-Type": "application/x-www-form-urlencoded",
@@ -108,12 +134,15 @@ const spotifyHelpers = {
     });
     return result;
   },
-  getUserTopArtists: async function (code, range) {
+  getSeveralTracksAudioFeatures: async function (code, ids) {
     let result = [];
     await axios({
       method: "GET",
       url:
-        "https://api.spotify.com/v1/me/top/artists?limit=5&time_range=" + range,
+        "https://api.spotify.com/v1/audio-features",
+      params: {
+        ids: ids.join(",")
+      },
       headers: {
         Authorization: "Bearer " + code,
         "Content-Type": "application/x-www-form-urlencoded",
@@ -212,4 +241,4 @@ const spotifyHelpers = {
   },
 };
 
-export default spotifyHelpers;
+export default spotifyClient;

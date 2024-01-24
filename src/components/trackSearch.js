@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import spotifyHelpers from "../spotifyHelpers";
+import spotifyClient from "../spotifyClient";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -52,7 +52,7 @@ export default class trackSearch extends Component {
   };
 
   getRecommendations = async () => {
-    spotifyHelpers.databySelectedTracks(this.selection);
+    spotifyClient.databySelectedTracks(this.selection);
   };
 
   render() {
