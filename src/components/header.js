@@ -2,10 +2,10 @@ const header = () => {
     return (
         <div className='header'>
             <div className="title">
-                <h1>Explore</h1>
                 <div className="logo"></div>
+                <h1>Melodimancer</h1>
             </div>
-            <div className="secondary"><small>recommendations</small></div>
+            <div className="secondary"><small>v{process.env.REACT_APP_VERSION}</small></div>
         </div>
     )
 }
