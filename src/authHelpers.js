@@ -47,37 +47,22 @@ const authHelpers = {
     })
   },
   getUserID: function () {
-    if (document.cookie) {
-      return document.cookie
-        .split('; ')
-        .find(row => row.startsWith('spotiUID='))
-        .split('=')[1];
-    }
-    else {
-      return null;
-    }
+    return document.cookie
+      ?.split('; ')
+      ?.find(row => row.startsWith('spotiUID='))
+      ?.split('=')[1];
   },
   getUsername: function () {
-    if (document.cookie) {
-      return document.cookie
-        .split('; ')
-        .find(row => row.startsWith('spotiUN='))
-        .split('=')[1];
-    }
-    else {
-      return null;
-    }
+    return document.cookie
+      ?.split('; ')
+      ?.find(row => row.startsWith('spotiUN='))
+      ?.split('=')[1];
   },
   getCookie: function () {
-    if (document.cookie) {
-      return document.cookie
-        .split('; ')
-        .find(row => row.startsWith('spotiToken='))
-        .split('=')[1];
-    }
-    else {
-      return null;
-    }
+    return document.cookie
+      ?.split('; ')
+      ?.find(row => row.startsWith('spotiToken='))
+      ?.split('=')[1] ?? null;
   },
   checkCookie: function () {
     if (document.cookie.split(';').some((item) => item.trim().startsWith('spotiToken='))) {
