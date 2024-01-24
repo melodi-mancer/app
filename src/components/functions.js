@@ -120,19 +120,19 @@ export default class functions extends React.Component {
         {this.state.inputsEmpty ? (
           <Fragment>
             <div className="funcs">
-              <button onClick={(e) => functions.getbyArtists("medium_term")}>
+              <button onClick={(e) => functions.getbyArtists("medium_term")} style={{display: 'none'}}>
                 Explore by Recent Top Artists
               </button>
               <button onClick={(e) => functions.getbyTracks("medium_term")}>
-                Explore by Recent Top Tracks
+                Get recommendations by Short Term Top Tracks
               </button>
             </div>
             <div className="funcs">
-              <button onClick={(e) => functions.getbyArtists("long_term")}>
+              <button onClick={(e) => functions.getbyArtists("long_term")} style={{display: 'none'}}>
                 Explore by All-Time Top Artists
               </button>
               <button onClick={(e) => functions.getbyTracks("long_term")}>
-                Explore by All-Time Top Tracks
+                Get recommendations by Long Term Top Tracks
               </button>
             </div>
           </Fragment>
