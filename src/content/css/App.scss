@@ -687,14 +687,11 @@ body {
                 width: 1.3rem;
                 background: no-repeat;
                 background-position: center;
-                background-image: url("/content/img/icon/GitHub-Mark-Light-64px.png");
+                background-image: url("/content/img/icon/github-mark-white.svg");
                 background-size: 1.3rem;
                 cursor: pointer;
                 &:hover {
-                    position: relative;
-                    bottom: 1.5px;
-                    border-radius: 10px;
-                    box-shadow: 0 4px 8px 0 rgba(29, 185, 84, 0.5), 0 6px 20px 0 rgba(29, 185, 84, 0.29);
+                    filter: drop-shadow(0 0 4px rgba(29, 185, 84));
                 }
             }
         }
@@ -721,44 +718,6 @@ body {
                     background-color: #1db954;
                     color: #191414;
                     box-shadow: 0 4px 8px 0 rgba(29, 185, 84, 0.5), 0 6px 20px 0 rgba(29, 185, 84, 0.29);
-                }
-            }
-        }
-
-        .info {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 0;
-            margin-right: 0.55rem;
-            align-self: center;
-
-            .spoti {
-                @media (max-width: 760px) {
-                    font-size: 0.5rem;
-                }
-                font-size: 0.55rem;
-            }
-
-            .react {
-                @media (max-width: 760px) {
-                    font-size: 0.55rem;
-                }
-                h3 {
-                    text-shadow: 1px 1px 2px rgba(255, 250, 250, 0.7);
-                    display: inline-block;
-                    margin: 0;
-                    color: #61dbfb;
-                    cursor: pointer;
-
-                    &:hover {
-                        position: relative;
-                        bottom: 1.5px;
-                    }
-                }
-                h2 {
-                    text-shadow: 1px 1px 2px rgba(111, 78, 55, 0.7);
-                    display: inline-block;
-                    margin: 0;
                 }
             }
         }
