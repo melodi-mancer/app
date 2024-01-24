@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import './content/css/App.scss';
 import Header from './components/header';
 import Footer from './components/footer';
@@ -11,7 +11,7 @@ function App() {
   useEffect(async () => {
     await spotifyClient.authenticate();
 
-    let data = JSON.parse(localStorage.getItem("spotifyData"));
+    let data = JSON.parse(localStorage.getItem("spotify-data"));
 
     if (data) {
       setData(data)
