@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/app/static/css/main.042b30c2.css",
+    "main.css": "/app/static/css/main.d6630df3.css",
     "main.js": "/app/static/js/main.e0524e4e.js",
     "static/media/melodimancer-logo.svg": "/app/static/media/melodimancer-logo.a3531246c242fc459fd4.svg",
     "index.html": "/app/index.html",
-    "main.042b30c2.css.map": "/app/static/css/main.042b30c2.css.map",
+    "main.d6630df3.css.map": "/app/static/css/main.d6630df3.css.map",
     "main.e0524e4e.js.map": "/app/static/js/main.e0524e4e.js.map"
   },
   "entrypoints": [
-    "static/css/main.042b30c2.css",
+    "static/css/main.d6630df3.css",
     "static/js/main.e0524e4e.js"
   ]
 }
