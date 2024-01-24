@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/app/static/css/main.f9f35081.css",
-    "main.js": "/app/static/js/main.51ed6830.js",
-    "static/media/Spotify_Icon_RGB_Green.png": "/app/static/media/Spotify_Icon_RGB_Green.cd66b8f63f6566194c7e.png",
+    "main.css": "/app/static/css/main.042b30c2.css",
+    "main.js": "/app/static/js/main.e0524e4e.js",
+    "static/media/melodimancer-logo.svg": "/app/static/media/melodimancer-logo.a3531246c242fc459fd4.svg",
     "index.html": "/app/index.html",
-    "main.f9f35081.css.map": "/app/static/css/main.f9f35081.css.map",
-    "main.51ed6830.js.map": "/app/static/js/main.51ed6830.js.map"
+    "main.042b30c2.css.map": "/app/static/css/main.042b30c2.css.map",
+    "main.e0524e4e.js.map": "/app/static/js/main.e0524e4e.js.map"
   },
   "entrypoints": [
-    "static/css/main.f9f35081.css",
-    "static/js/main.51ed6830.js"
+    "static/css/main.042b30c2.css",
+    "static/js/main.e0524e4e.js"
   ]
 }
