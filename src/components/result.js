@@ -22,20 +22,10 @@ export default class result extends React.Component {
         <Tracks data={this.props.data}></Tracks>
       )
     }
-    else if (this.props.token && this.props.token !== "access_denied") {
+    else {
       return (
         <Functions></Functions>
       )
-    }
-    else if (this.props.token && this.props.token === "error") {
-      return (
-        <div className='results'><div className='error'><h5>houston, we have a problem</h5><h5>..let's try again</h5></div></div>)
-    }
-    else if (this.state.loading) {
-      return <div className='results'><div className='state'>loading..</div></div>
-    }
-    else {
-      return ("")
     }
   }
 }

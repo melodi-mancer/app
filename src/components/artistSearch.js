@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import spotifyClient from "../spotifyClient";
+import spotifyHelper from "../spotifyHelper";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -53,7 +53,7 @@ export default class artistSearch extends Component {
   };
 
   getRecommendations = async () => {
-    spotifyClient.databySelectedArtists(this.selection);
+    spotifyHelper.setRecommendationsBySelectedArtists(this.selection);
     this.scrollToElement();
   };
 

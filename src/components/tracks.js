@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import spotifyClient from "../spotifyClient";
+import spotifyHelper from "../spotifyHelper";
 
 export default class tracks extends React.Component {
   state = {
@@ -17,7 +17,7 @@ export default class tracks extends React.Component {
         <div className="results">
           <div className="funcs">
             <button onClick={(e) => tracks.clearData()}>Go back</button>
-            <button onClick={(e) => spotifyClient.createPlaylist()}>
+            <button onClick={(e) => spotifyHelper.createPlaylist()}>
               Create a Playlist
             </button>
             {/* <span>listing {this.props.data.tracks.length} recommended tracks</span> */}
@@ -76,7 +76,7 @@ export default class tracks extends React.Component {
           <div className="funcs">
             {/* <span>listing {this.props.data.tracks.length} recommended tracks</span> */}
             <button onClick={(e) => tracks.clearData()}>Go back</button>
-            <button onClick={(e) => spotifyClient.createPlaylist()}>
+            <button onClick={(e) => spotifyHelper.createPlaylist()}>
               Create a Playlist
             </button>
           </div>
@@ -95,7 +95,7 @@ export default class tracks extends React.Component {
 }
 
 tracks.clearData = () => {
-  localStorage.removeItem("spotiData");
+  localStorage.removeItem("spotifyData");
   window.location.reload();
 };
 

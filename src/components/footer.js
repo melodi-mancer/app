@@ -1,10 +1,6 @@
-import authHelpers from "../authHelpers";
-
-const footer = (props) => {
-  const { logged } = props;
+const footer = () => {
   return (
     <footer>
-      {logged ? <div className="logout"><button onClick={e => authHelpers.logout()}>&gt; log out</button></div> : <div className="logout"></div>}
       <div className="github"><button onClick={footer.goToRepo}></button></div>
     </footer>
   )

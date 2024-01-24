@@ -1,5 +1,6 @@
 import React, { Fragment, Keyboard } from "react";
-import spotifyClient from "../spotifyClient";
+import spotifyHelper from "../spotifyHelper";
+import { spotifyClient } from "../spotifyClient";
 import ArtistSearch from "./artistSearch";
 import TrackSearch from "./trackSearch";
 import Loading from "./loading";
@@ -68,7 +69,7 @@ export default class functions extends React.Component {
   handleArtist = async (v) => {
     this.tracks = null;
     this.trackInput.current.value = "";
-    this.artists = await spotifyClient.searchArtist(v);
+    this.artists = (await spotifyClient.search(v, ["artist"], undefined, 18)).artists.items;
     this.setState({ artistsUpdated: true });
     this.setState({ loading: false });
   };
@@ -76,7 +77,8 @@ export default class functions extends React.Component {
   handleTrack = async (v) => {
     this.artists = null;
     this.artistInput.current.value = "";
-    this.tracks = await spotifyClient.searchTrack(v);
+    this.tracks = (await spotifyClient.search(v, ["track"], undefined, 24)).tracks.items;
+    this.tracks = await spotifyHelper.searchTrack(v);
     this.setState({ tracksUpdated: true });
     this.setState({ loading: false });
   };
@@ -146,13 +148,12 @@ export default class functions extends React.Component {
 }
 
 functions.getbyArtists = async (timeRange) => {
-  //spotifyClient.databyAllTimeTopArtists(range);
+  //spotifyHelper.setRecommendationsByTopArtists(timeRange);
 };
 
 functions.getbyTracks = async (timeRange) => {
-  spotifyClient.databyAllTimeTopTracks(timeRange);
-
-  //let audioFeatures = await spotifyClient.getUserTopTracksAudioFeatures(timeRange);
+  //let audioFeatures = await spotifyHelper.getUserTopTracksAudioFeatures(timeRange);
   //let stats = await statisticalAnalysisHelper.getSummary(audioFeatures);
-  //onsole.log(stats);
+
+  spotifyHelper.setRecommendationsByTopTracks(timeRange);
 };

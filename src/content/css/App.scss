@@ -121,26 +121,6 @@ body {
                 }
             }
         }
-
-        .auth-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            margin-top: 1.5rem;
-            background-color: transparent;
-
-            .auth-link {
-                @include spoti-button();
-            }
-
-            h6 {
-                margin: 0;
-                margin-top: 1rem;
-                font-size: 0.6rem;
-            }
-        }
     }
 
     .main {
@@ -657,29 +637,15 @@ body {
 }
 
 .bottom {
-    font-family: $font-sans;
     display: block;
-    height: 25px;
-    width: 100%;
-    position: absolute;
-    top: 5px;
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
 
     footer {
-        display: flex;
-        flex-direction: row;
-        font-size: 0.65em;
-        margin-right: 1.5rem;
-        width: 100%;
-        text-align: center;
-
         @include no-select();
 
         .github {
-            margin-right: 0.6rem;
-            justify-self: center;
-            align-self: center;
-            flex-grow: 0;
-
             button {
                 outline: none;
                 border: none;
@@ -692,32 +658,6 @@ body {
                 cursor: pointer;
                 &:hover {
                     filter: drop-shadow(0 0 4px rgba(29, 185, 84));
-                }
-            }
-        }
-
-        .logout {
-            margin-left: 0.6em;
-            justify-self: flex-start;
-            align-self: flex-start;
-            text-align: left;
-            flex-grow: 8;
-
-            button {
-                color: #1db954;
-                outline: none;
-                border: none;
-                background-color: transparent;
-                width: 4.4rem;
-                height: 1.4rem;
-                cursor: pointer;
-                &:hover {
-                    position: relative;
-                    bottom: 1.5px;
-                    border-radius: 10px;
-                    background-color: #1db954;
-                    color: #191414;
-                    box-shadow: 0 4px 8px 0 rgba(29, 185, 84, 0.5), 0 6px 20px 0 rgba(29, 185, 84, 0.29);
                 }
             }
         }
