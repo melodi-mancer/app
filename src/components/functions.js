@@ -152,8 +152,11 @@ functions.getbyArtists = async (timeRange) => {
 };
 
 functions.getbyTracks = async (timeRange) => {
-  //let audioFeatures = await spotifyHelper.getUserTopTracksAudioFeatures(timeRange);
-  //let stats = await statisticalAnalysisHelper.getSummary(audioFeatures);
+  let audioFeatures = await spotifyHelper.getUserTopTracksAudioFeatures(timeRange);
+  
+  // this is going to do a refresh right now
+  let cfaProfile = await statisticalAnalysisHelper.getCfa(audioFeatures);
 
-  spotifyHelper.setRecommendationsByTopTracks(timeRange);
+  console.log(cfaProfile)
+  //spotifyHelper.setRecommendationsByTopTracks(timeRange);
 };

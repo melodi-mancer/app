@@ -129,6 +129,24 @@ body {
         margin-top: 5%;
         margin-bottom: 5rem;
 
+        .stats-container {
+            width: 100%;
+            max-width: 100%;
+            overflow: scroll;
+
+            .stats-table {
+                border: 1px solid #1db954;
+                margin-left: auto;
+                margin-right: auto;
+                border-collapse: collapse;
+
+                th, td {
+                    padding: .3rem;
+                    border: 1px solid #1db954;
+                }
+            }
+        }
+
         .results-container {
             height: 100%;
 

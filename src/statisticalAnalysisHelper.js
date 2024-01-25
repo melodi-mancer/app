@@ -1,22 +1,32 @@
 import statisticalAnalysisApiClient from "./statisticalAnalysisApiClient";
 
 const statisticalAnalysisHelper = {
-  getSummary: async function (audioFeatures) {
+  getCfa: async function (audioFeatures) {
     // Remap to something Sam's API can work with
     let formattedAudioFeatures = audioFeatures.map(f => { return {
-      Danceability: f.danceability,
-      Energy: f.energy,
-      Loudness: f.loudness,
-      Speechiness: f.speechiness,
-      Acousticness: f.acousticness,
-      Instrumentalness: f.instrumentalness,
-      Liveness: f.liveness,
-      Valence: f.valence,
-      Tempo: f.tempo
+      danceability: f.danceability,
+      energy: f.energy,
+      loudness: f.loudness,
+      speechiness: f.speechiness,
+      acousticness: f.acousticness,
+      instrumentalness: f.instrumentalness,
+      liveness: f.liveness,
+      valence: f.valence,
+      tempo: f.tempo
     }});
 
-    return await statisticalAnalysisApiClient.getSummary(formattedAudioFeatures);
-  }
+    const request = {
+      audio_features: formattedAudioFeatures
+    };
+
+    console.log(request);
+
+    let response = await statisticalAnalysisApiClient.getCfa(request);
+
+    localStorage.setItem("analysis-data", JSON.stringify(response));
+
+    return response;
+  },
 };
 
 export default statisticalAnalysisHelper;
