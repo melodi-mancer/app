@@ -157,6 +157,30 @@ functions.getbyTracks = async (timeRange) => {
   // this is going to do a refresh right now
   let cfaProfile = await statisticalAnalysisHelper.getCfa(audioFeatures);
 
-  console.log(cfaProfile)
-  //spotifyHelper.setRecommendationsByTopTracks(timeRange);
+  // pretty sloppy
+  let userTopTracks = JSON.parse(localStorage.getItem("spotify-top-tracks")).slice(0, 5).map(track => track.id);;
+
+  // let's just do rc1 for now
+  let attributes = cfaProfile.profile_cfa.filter((row) => row.RC1 !== 0);
+
+  let percentage = 0.3;
+
+  let recommendationsRequest = {};
+  recommendationsRequest.seed_tracks = userTopTracks;
+  // add our 5 top tracks HERE
+
+  attributes.forEach((attribute) => 
+  {
+    let adjustment = Math.abs(attribute.new_RC1 * percentage);
+    recommendationsRequest[`min_${attribute._row}`] = attribute.new_RC1 - adjustment;
+    recommendationsRequest[`max_${attribute._row}`] = attribute.new_RC1 + adjustment;
+  });
+
+  // users recommendations based on the attributes and top artists
+  let recommendations = await spotifyClient.recommendations.get(recommendationsRequest);
+
+  localStorage.setItem("spotify-data", JSON.stringify(recommendations));
+
+  // pretty clunky
+  window.location.reload();
 };

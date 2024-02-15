@@ -19,10 +19,15 @@ const spotifyHelper = {
   },
   
   getUserTopTracksAudioFeatures: async function(timeRange) {
-    // Get the 99 top tracks for the current user
+    // get the 99 top tracks for the current user
     let tracks = await this.getAllUserTopTracks(timeRange);
 
-    // Get the audio features
+console.log("HERER");
+
+    // need to persist this
+    localStorage.setItem("spotify-top-tracks", JSON.stringify(tracks));
+
+    // get the audio features
     let trackIds = tracks.map((t) => t.id);
     return await spotifyClient.tracks.audioFeatures(trackIds);
   },

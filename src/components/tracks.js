@@ -95,7 +95,9 @@ export default class tracks extends React.Component {
 }
 
 tracks.clearData = () => {
+  localStorage.removeItem("spotify-top-tracks");
   localStorage.removeItem("spotify-data");
+  localStorage.removeItem("analysis-data");
   window.location.reload();
 };
 

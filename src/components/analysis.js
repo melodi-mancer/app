@@ -18,7 +18,7 @@ export default class analysis extends React.Component {
     if (this.props.data) {
       const headings = ["RC1", "RC2", "RC3", "new_RC1", "new_RC2", "new_RC3", "_row"];
       return (
-        <table class="stats-table">
+        <table className="stats-table">
           <thead>
             <tr>
               {headings.map(heading => {
@@ -30,7 +30,7 @@ export default class analysis extends React.Component {
             {this.props.data.profile_cfa.map((row, index) => {
               return <tr key={index}>
                 {headings.map((key, index) => {
-                  return <td key={row[key]}>{row[key]}</td>
+                  return <td key={index}>{row[key]}</td>
                 })}
               </tr>;
             })}
