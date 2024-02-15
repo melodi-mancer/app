@@ -16,3 +16,17 @@ export const authCreds =
     scopes: [ "user-read-private", "user-top-read", "playlist-modify-private" ],
 };
 ```
+
+## Run
+
+After checking out for the first time run:
+
+```
+npm install
+```
+
+Then to start the app:
+
+```
+npm start
+```
