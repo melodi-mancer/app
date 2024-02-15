@@ -123,11 +123,16 @@ export default class functions extends React.Component {
         {this.state.inputsEmpty ? (
           <Fragment>
             <div className="funcs">
+              <button onClick={(e) => functions.getbyTracks("short_term")}>
+                Get recommendations by Short Term Top Tracks
+              </button>
+            </div>
+            <div className="funcs">
               <button onClick={(e) => functions.getbyArtists("medium_term")} style={{display: 'none'}}>
                 Explore by Recent Top Artists
               </button>
               <button onClick={(e) => functions.getbyTracks("medium_term")}>
-                Get recommendations by Short Term Top Tracks
+                Get recommendations by Medium Term Top Tracks
               </button>
             </div>
             <div className="funcs">
@@ -163,17 +168,13 @@ functions.getbyTracks = async (timeRange) => {
   // let's just do rc1 for now
   let attributes = cfaProfile.profile_cfa.filter((row) => row.RC1 !== 0);
 
-  let percentage = 0.3;
-
   let recommendationsRequest = {};
   recommendationsRequest.seed_tracks = userTopTracks;
-  // add our 5 top tracks HERE
+  recommendationsRequest.limit = 100;
 
   attributes.forEach((attribute) => 
   {
-    let adjustment = Math.abs(attribute.new_RC1 * percentage);
-    recommendationsRequest[`min_${attribute._row}`] = attribute.new_RC1 - adjustment;
-    recommendationsRequest[`max_${attribute._row}`] = attribute.new_RC1 + adjustment;
+    recommendationsRequest[`target_${attribute._row}`] = attribute.new_RC1;
   });
 
   // users recommendations based on the attributes and top artists
