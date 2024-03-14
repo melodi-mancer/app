@@ -22,8 +22,6 @@ const spotifyHelper = {
     // get the 99 top tracks for the current user
     let tracks = await this.getAllUserTopTracks(timeRange);
 
-console.log("HERER");
-
     // need to persist this
     localStorage.setItem("spotify-top-tracks", JSON.stringify(tracks));
 
