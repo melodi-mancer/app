@@ -17,6 +17,79 @@ const spotifyHelper = {
 
     return tracks1.concat(tracks2);
   },
+
+  getUserTopTracksArtists: async function(timeRange) {
+    //Method to get artist information for user's top tracks
+
+    //First get tracks and trackID's
+    let tracks1 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 49, 0)).items;
+    let tracks2 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 49, 49)).items;
+
+    //Then get artistID's for those tracks
+    let trackArtistIds1 = tracks1.map((t) => t.artists[0].id);
+    let trackArtistIds2 = tracks1.map((t) => t.artists[0].id);
+
+    //Get artist information for those tracks
+    let artistsList1 = (await spotifyClient.artists.get(trackArtistIds1));
+    let artistsList2 = (await spotifyClient.artists.get(trackArtistIds2));
+    
+    return artistsList1.concat(artistsList2); 
+  },
+
+  filterTracksOnGenre: async function(timeRange)
+  {
+    //Method to combine tracks with artist genres
+
+  let tracks = await this.getAllUserTopTracks(timeRange);
+
+  //Create array container and constructor for new objects to combine information
+  var allObjects = [];
+  function aTrackArtist (trackID, artistName, artistID, artistGenres)
+  {
+    this.trackID = trackID;
+    this.artistName = artistName;
+    this.artistID = artistID;
+    this.artistGenres = artistGenres;
+  }
+   
+  //creates object for each track with trackinformation
+   tracks.forEach((track) => 
+   {
+     track.artists[0].id = new aTrackArtist(track.id, track.artists[0].name, track.artists[0].id, track.name);
+     allObjects.push(track.artists[0].id);
+   });
+
+    let tracksArtists = await this.getUserTopTracksArtists(timeRange);
+   
+  
+  //Creates container array (which we might not need),filters the object array and update genre information on track objects from the artist information 
+  var genreTracks = [];
+  tracksArtists.forEach((tracksArtist) => 
+    {
+      if (tracksArtist.genres[0])
+      {
+        allObjects.filter(function(allObj) {
+          return allObj.artistID === (tracksArtist.id);
+      }).map(function(allObj) {
+          allObj.artistGenres = tracksArtist.genres[0]+tracksArtist.genres[1];
+          return allObj
+      });
+      }
+      else
+      {
+      }
+    });
+    
+    //Filters the list of tracks based on a specific common genre keyword (default constant "folk" music, but should be a variable)
+    var filteredTracks = allObjects.filter(function(allObj) {
+      return (allObj.artistGenres).includes("folk");
+    });
+
+    genreTracks.push(filteredTracks);
+
+    //console.log(contArtist);
+    return genreTracks;
+  },
   
   getUserTopTracksAudioFeatures: async function(timeRange) {
     // get the 99 top tracks for the current user
