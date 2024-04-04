@@ -6,7 +6,7 @@ const statisticalAnalysisApiClient = {
     await axios({
       method: "POST",
       url:
-        "http://206.81.18.129:8000/cfa",
+        "https://melodimancers.com/cfa",
       data: audioFeatures,
       json: true,
     }).then((res) => {
