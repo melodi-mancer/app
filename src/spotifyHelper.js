@@ -27,7 +27,7 @@ const spotifyHelper = {
 
     //Then get artistID's for those tracks
     let trackArtistIds1 = tracks1.map((t) => t.artists[0].id);
-    let trackArtistIds2 = tracks1.map((t) => t.artists[0].id);
+    let trackArtistIds2 = tracks2.map((t) => t.artists[0].id);
 
     //Get artist information for those tracks
     let artistsList1 = (await spotifyClient.artists.get(trackArtistIds1));
@@ -36,7 +36,7 @@ const spotifyHelper = {
     return artistsList1.concat(artistsList2); 
   },
 
-  filterTracksOnGenre: async function(timeRange)
+  filterTracksOnGenre: async function(timeRange,genre)
   {
     //Method to combine tracks with artist genres
 
@@ -71,7 +71,7 @@ const spotifyHelper = {
         allObjects.filter(function(allObj) {
           return allObj.artistID === (tracksArtist.id);
       }).map(function(allObj) {
-          allObj.artistGenres = tracksArtist.genres[0]+tracksArtist.genres[1];
+          allObj.artistGenres = tracksArtist.genres[0]+tracksArtist.genres[1]+tracksArtist.genres[2];
           return allObj
       });
       }
@@ -82,7 +82,7 @@ const spotifyHelper = {
     
     //Filters the list of tracks based on a specific common genre keyword (default constant "folk" music, but should be a variable)
     var filteredTracks = allObjects.filter(function(allObj) {
-      return (allObj.artistGenres).includes("folk");
+      return (allObj.artistGenres).includes(genre);
     });
 
     genreTracks.push(filteredTracks);
@@ -101,6 +101,32 @@ const spotifyHelper = {
     // get the audio features
     let trackIds = tracks.map((t) => t.id);
     return await spotifyClient.tracks.audioFeatures(trackIds);
+  },
+
+  getGenreTracksAudioFeatures: async function(timeRange,genre) {
+    // get the top tracks for the current user based on genre   
+   let tracksWithGenre = await this.filterTracksOnGenre(timeRange,genre);
+
+   // get the artist information for the top tracks
+   let tracksArtists = await this.getUserTopTracksArtists(timeRange);
+
+   // persisting stuff with genres I might not need
+   localStorage.setItem("top-tracks-artists", JSON.stringify(tracksArtists));
+
+
+
+   let trackIds = [];
+   tracksWithGenre.forEach((track) =>
+   {
+     trackIds.push(track.trackID);
+
+   });
+
+   //persisting tracks with genres 
+   console.log(trackIds);
+   localStorage.setItem("spotify-top-tracks", JSON.stringify(trackIds));
+
+   return await spotifyClient.tracks.audioFeatures(trackIds);
   },
 
   setRecommendationsByTopArtists: async function (timeRange) {

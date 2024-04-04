@@ -15,6 +15,7 @@ export default class functions extends React.Component {
       clearResults: false,
       inputsEmpty: true,
       loading: false,
+      genre: "",
     };
     this.timer = null;
     this.artists = null;
@@ -83,6 +84,17 @@ export default class functions extends React.Component {
     this.setState({ loading: false });
   };
 
+    //Sets the genre based on the dropDown 
+    setGenre = (event) => {
+      this.setState({genre:(event.target.value)});
+        };
+    
+    //Genre Button function
+    getRecked = () => {
+      let genre = this.state.genre;
+      functions.getbyTracks("short_term",genre);
+    }
+
   render() {
     return (
       <div className="results">
@@ -142,6 +154,17 @@ export default class functions extends React.Component {
               <button onClick={(e) => functions.getbyTracks("long_term")}>
                 Get recommendations by Long Term Top Tracks
               </button>
+            </div>
+            <div className="funcs">
+            <select onChange={this.setGenre}>
+              <option>Select</option>
+              <option value="rock">Rock</option>
+              <option value="folk">Folk</option>
+              <option value="grime">Grime</option>
+              <option value="samba">Samba</option>
+              <option value="progressive">Progressive</option>
+            </select>
+            <button onClick={this.getRecked}>Get recommendations by Short Term Top Tracks in the {this.state.genre} genre</button>
             </div>
           </Fragment>
         ) : (
