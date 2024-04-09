@@ -16,10 +16,15 @@ export default class functions extends React.Component {
       inputsEmpty: true,
       loading: false,
       genre: "",
+      mpg: "",
     };
     this.timer = null;
     this.artists = null;
     this.tracks = null;
+    this.userGenre = spotifyHelper.getUserTopGenre("short_term").then((value) => {
+      this.setState({mpg:(value)});
+  });
+
 
     this.artistInput = React.createRef();
     this.trackInput = React.createRef();
@@ -92,8 +97,15 @@ export default class functions extends React.Component {
     //Genre Button function
     getRecked = () => {
       let genre = this.state.genre;
-      functions.getbyTracks("short_term",genre);
-    }
+      functions.getbyGenreTracks("short_term",genre);
+    };
+
+    //Auto-Pick Genre Button function
+    getAutoRecked = () => {
+      let mostPlayedGenre = this.state.mpg;
+      functions.getbyGenreTracks("short_term",mostPlayedGenre);
+    };
+
 
   render() {
     return (
@@ -166,6 +178,11 @@ export default class functions extends React.Component {
             </select>
             <button onClick={this.getRecked}>Get recommendations by Short Term Top Tracks in the {this.state.genre} genre</button>
             </div>
+            <div className="funcs">
+              <button onClick={this.getAutoRecked}>
+                Get recommendations based on most played genre: {this.state.mpg}
+              </button>
+            </div>
           </Fragment>
         ) : (
           ""
@@ -187,6 +204,37 @@ functions.getbyTracks = async (timeRange) => {
 
   // pretty sloppy
   let userTopTracks = JSON.parse(localStorage.getItem("spotify-top-tracks")).slice(0, 5).map(track => track.id);;
+
+  // let's just do rc1 for now
+  let attributes = cfaProfile.profile_cfa.filter((row) => row.RC1 !== 0);
+
+  let recommendationsRequest = {};
+  recommendationsRequest.seed_tracks = userTopTracks;
+  recommendationsRequest.limit = 100;
+
+  attributes.forEach((attribute) => 
+  {
+    recommendationsRequest[`target_${attribute._row}`] = attribute.new_RC1;
+  });
+
+  // users recommendations based on the attributes and top artists
+  let recommendations = await spotifyClient.recommendations.get(recommendationsRequest);
+
+  localStorage.setItem("spotify-data", JSON.stringify(recommendations));
+
+  // pretty clunky
+  window.location.reload();
+};
+
+functions.getbyGenreTracks = async (timeRange,genre) => {
+  let audioFeatures = await spotifyHelper.getGenreTracksAudioFeatures(timeRange,genre);
+  //console.log(audioFeatures);
+  
+  // this is going to do a refresh right now
+  let cfaProfile = await statisticalAnalysisHelper.getCfa(audioFeatures);
+
+  // pretty sloppy
+  let userTopTracks = JSON.parse(localStorage.getItem("spotify-top-tracks")).slice(0, 5);
 
   // let's just do rc1 for now
   let attributes = cfaProfile.profile_cfa.filter((row) => row.RC1 !== 0);

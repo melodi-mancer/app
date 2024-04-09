@@ -1,3 +1,4 @@
+import tracks from "./components/tracks";
 import { spotifyClient } from "./spotifyClient";
 
 const spotifyHelper = {
@@ -15,7 +16,9 @@ const spotifyHelper = {
     let tracks1 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 49, 0)).items;
     let tracks2 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 50, 49)).items;
 
-    return tracks1.concat(tracks2);
+    var fullTrackList = tracks1.concat(tracks2);
+    //console.log(fullTrackList);
+    return fullTrackList;
   },
 
   getUserTopTracksArtists: async function(timeRange) {
@@ -23,7 +26,7 @@ const spotifyHelper = {
 
     //First get tracks and trackID's
     let tracks1 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 49, 0)).items;
-    let tracks2 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 49, 49)).items;
+    let tracks2 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 50, 49)).items;
 
     //Then get artistID's for those tracks
     let trackArtistIds1 = tracks1.map((t) => t.artists[0].id);
@@ -33,29 +36,60 @@ const spotifyHelper = {
     let artistsList1 = (await spotifyClient.artists.get(trackArtistIds1));
     let artistsList2 = (await spotifyClient.artists.get(trackArtistIds2));
     
-    return artistsList1.concat(artistsList2); 
+    var fullArtistList = artistsList1.concat(artistsList2);
+    //console.log(fullArtistList);
+    return fullArtistList; 
   },
+  
+  getUserTopGenre: async function(timeRange)
+  {
+    let genreList = [];
+    let tracksArtists = await this.getUserTopTracksArtists(timeRange);
+    
+      tracksArtists.forEach((tracksArtist) => 
+      {
+        if (tracksArtist.genres[0])
+        {
+        genreList.push(tracksArtist.genres[0]);
+        //genreList.push(tracksArtist.genres[1]);
+        //genreList.push(tracksArtist.genres[2]);
+        //genreList.push(tracksArtist.genres[3]);
+        }
+      });
+    
+   //console.log(genreList);
+
+    var mostOcc = genreList.sort((a,b) =>
+          genreList.filter(v => v===a).length
+        - genreList.filter(v => v===b).length
+    ).pop();
+    return mostOcc;
+},
+
 
   filterTracksOnGenre: async function(timeRange,genre)
   {
-    //Method to combine tracks with artist genres
 
+  //Method to combine tracks with artist genres
   let tracks = await this.getAllUserTopTracks(timeRange);
 
   //Create array container and constructor for new objects to combine information
   var allObjects = [];
-  function aTrackArtist (trackID, artistName, artistID, artistGenres)
+  function aTrackArtist (trackID, artistName, artistID, artistGenres, artistGenres1, artistGenres2, artistGenres3)
   {
     this.trackID = trackID;
     this.artistName = artistName;
     this.artistID = artistID;
     this.artistGenres = artistGenres;
+    this.artistGenres1 = artistGenres1;
+    this.artistGenres2 = artistGenres2;
+    this.artistGenres3 = artistGenres3;
   }
    
   //creates object for each track with trackinformation
    tracks.forEach((track) => 
    {
-     track.artists[0].id = new aTrackArtist(track.id, track.artists[0].name, track.artists[0].id, track.name);
+     track.artists[0].id = new aTrackArtist(track.id, track.artists[0].name, track.artists[0].id, "");
      allObjects.push(track.artists[0].id);
    });
 
@@ -71,7 +105,11 @@ const spotifyHelper = {
         allObjects.filter(function(allObj) {
           return allObj.artistID === (tracksArtist.id);
       }).map(function(allObj) {
-          allObj.artistGenres = tracksArtist.genres[0]+tracksArtist.genres[1]+tracksArtist.genres[2];
+          allObj.artistGenres = tracksArtist.genres[0];
+          allObj.artistGenres1 = tracksArtist.genres[0];
+          allObj.artistGenres2 = tracksArtist.genres[1];
+          allObj.artistGenres3 = tracksArtist.genres[2];
+          //console.log(allObj);
           return allObj
       });
       }
@@ -80,15 +118,15 @@ const spotifyHelper = {
       }
     });
     
+    
+ 
     //Filters the list of tracks based on a specific common genre keyword (default constant "folk" music, but should be a variable)
     var filteredTracks = allObjects.filter(function(allObj) {
+      //console.log(allObj.artistGenres);
       return (allObj.artistGenres).includes(genre);
     });
 
-    genreTracks.push(filteredTracks);
-
-    //console.log(contArtist);
-    return genreTracks;
+    return filteredTracks;
   },
   
   getUserTopTracksAudioFeatures: async function(timeRange) {
@@ -104,26 +142,25 @@ const spotifyHelper = {
   },
 
   getGenreTracksAudioFeatures: async function(timeRange,genre) {
-    // get the top tracks for the current user based on genre   
-   let tracksWithGenre = await this.filterTracksOnGenre(timeRange,genre);
-
+      
    // get the artist information for the top tracks
    let tracksArtists = await this.getUserTopTracksArtists(timeRange);
 
    // persisting stuff with genres I might not need
    localStorage.setItem("top-tracks-artists", JSON.stringify(tracksArtists));
 
-
+   // get the top tracks for the current user based on genre 
+   let tracksWithGenre = await this.filterTracksOnGenre(timeRange,genre);
+   //console.log(tracksWithGenre);
 
    let trackIds = [];
    tracksWithGenre.forEach((track) =>
    {
      trackIds.push(track.trackID);
-
    });
 
    //persisting tracks with genres 
-   console.log(trackIds);
+   //console.log(trackIds);
    localStorage.setItem("spotify-top-tracks", JSON.stringify(trackIds));
 
    return await spotifyClient.tracks.audioFeatures(trackIds);
