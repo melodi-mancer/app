@@ -17,6 +17,7 @@ export default class functions extends React.Component {
       loading: false,
       genre: "",
       mpg: "",
+      artistmpg:"",
     };
     this.timer = null;
     this.artists = null;
@@ -24,6 +25,9 @@ export default class functions extends React.Component {
     this.userGenre = spotifyHelper.getUserTopGenre("short_term").then((value) => {
       this.setState({mpg:(value)});
   });
+  this.artistGenre = spotifyHelper.getUserTopArtistGenre("medium_term").then((value) => {
+    this.setState({artistmpg:(value)});
+});
 
 
     this.artistInput = React.createRef();
@@ -100,10 +104,16 @@ export default class functions extends React.Component {
       functions.getbyGenreTracks("short_term",genre);
     };
 
-    //Auto-Pick Genre Button function
+    //Auto-Pick Genre by tracks Button function
     getAutoRecked = () => {
       let mostPlayedGenre = this.state.mpg;
       functions.getbyGenreTracks("short_term",mostPlayedGenre);
+    };
+    
+    //Auto-Pick Genre by artists Button function
+    getArtistAutoRecked = () => {
+      let mostPlayedArtistGenre = this.state.artistmpg;
+      functions.getbyGenreTracks("medium_term",mostPlayedArtistGenre);
     };
 
 
@@ -183,6 +193,11 @@ export default class functions extends React.Component {
                 Get recommendations based on most played genre: {this.state.mpg}
               </button>
             </div>
+            <div className="funcs">
+              <button onClick={this.getArtistAutoRecked}>
+                Get recommendations based on genre of most played artists: {this.state.artistmpg}
+              </button>
+            </div>
           </Fragment>
         ) : (
           ""
@@ -229,6 +244,7 @@ functions.getbyTracks = async (timeRange) => {
 functions.getbyGenreTracks = async (timeRange,genre) => {
   let audioFeatures = await spotifyHelper.getGenreTracksAudioFeatures(timeRange,genre);
   //console.log(audioFeatures);
+  console.log(genre);
   
   // this is going to do a refresh right now
   let cfaProfile = await statisticalAnalysisHelper.getCfa(audioFeatures);

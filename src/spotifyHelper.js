@@ -27,6 +27,7 @@ const spotifyHelper = {
     //First get tracks and trackID's
     let tracks1 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 49, 0)).items;
     let tracks2 = (await spotifyClient.currentUser.topItems("tracks", timeRange, 50, 49)).items;
+    //console.log(tracks1);
 
     //Then get artistID's for those tracks
     let trackArtistIds1 = tracks1.map((t) => t.artists[0].id);
@@ -43,9 +44,12 @@ const spotifyHelper = {
   
   getUserTopGenre: async function(timeRange)
   {
+  //Method for finding user's top genre based on most played tracks
+
     let genreList = [];
     let tracksArtists = await this.getUserTopTracksArtists(timeRange);
-    
+      
+      //Save genres to list. Only selecting first genre for now
       tracksArtists.forEach((tracksArtist) => 
       {
         if (tracksArtist.genres[0])
@@ -57,15 +61,46 @@ const spotifyHelper = {
         }
       });
     
-   //console.log(genreList);
-
+    
+   //Find most occurring genre 
     var mostOcc = genreList.sort((a,b) =>
           genreList.filter(v => v===a).length
         - genreList.filter(v => v===b).length
     ).pop();
+    console.log("most played tracks genre:" + " " + mostOcc);
     return mostOcc;
 },
 
+getUserTopArtistGenre: async function(timeRange)
+{
+  //Method for finding user's top genre based on most played artists
+
+  let genreArtistList = [];
+  let artists1 = (await spotifyClient.currentUser.topItems("artists", timeRange, 49, 0)).items;
+  let artists2 = (await spotifyClient.currentUser.topItems("artists", timeRange, 50, 49)).items;
+  var fullArtistList = artists1.concat(artists2);
+    
+
+    //Save genres to list. Only selecting first genre for now
+    fullArtistList.forEach((tracksArtist) => 
+    {
+      if (tracksArtist.genres[0])
+      {
+      genreArtistList.push(tracksArtist.genres[0]);
+      //genreList.push(tracksArtist.genres[1]);
+      //genreList.push(tracksArtist.genres[2]);
+      //genreList.push(tracksArtist.genres[3]);
+      }
+    });
+  
+  //Find most occurring genre 
+  var mostOcc = genreArtistList.sort((a,b) =>
+        genreArtistList.filter(v => v===a).length
+      - genreArtistList.filter(v => v===b).length
+  ).pop();
+  console.log("most played artists genre:" + " " + mostOcc);
+  return mostOcc;
+},
 
   filterTracksOnGenre: async function(timeRange,genre)
   {
@@ -142,12 +177,6 @@ const spotifyHelper = {
   },
 
   getGenreTracksAudioFeatures: async function(timeRange,genre) {
-      
-   // get the artist information for the top tracks
-   let tracksArtists = await this.getUserTopTracksArtists(timeRange);
-
-   // persisting stuff with genres I might not need
-   localStorage.setItem("top-tracks-artists", JSON.stringify(tracksArtists));
 
    // get the top tracks for the current user based on genre 
    let tracksWithGenre = await this.filterTracksOnGenre(timeRange,genre);
