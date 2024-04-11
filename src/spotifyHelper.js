@@ -132,8 +132,7 @@ getUserTopArtistGenre: async function(timeRange)
    
   
   //Creates container array (which we might not need),filters the object array and update genre information on track objects from the artist information 
-  var genreTracks = [];
-  tracksArtists.forEach((tracksArtist) => 
+   tracksArtists.forEach((tracksArtist) => 
     {
       if (tracksArtist.genres[0])
       {
@@ -219,9 +218,31 @@ getUserTopArtistGenre: async function(timeRange)
     const currentDate = new Date();
     let profile = await spotifyClient.currentUser.profile();
     let playlist = await spotifyClient.playlists.createPlaylist(profile.id, { name: `Melodimancer: ${currentDate.toISOString()} `, public: false});
+    
+    let allTracksUris = [];
+    var allTracks = JSON.parse(localStorage.getItem("spotify-data")).tracks.map((track) => (
+      track.uri));
+      console.log(allTracks)
+    
+    var sum = 0;
 
+    allTracks.forEach((tracky) =>
+    {
+      if (sum < 600000)
+      {
+          allTracksUris.push(tracky);
+      }
+      //console.log(allTracksUris);
+      sum = allTracksUris.reduce(
+        (a, b) => a + b,
+        0,
+      );
+      //console.log("sum:" + " " + sum);
+    });
+     
+    //console.log(allTracks);
     var trackUris = JSON.parse(localStorage.getItem("spotify-data")).tracks.map((t) => t.uri);
-
+    
     await spotifyClient.playlists.addItemsToPlaylist(playlist.id, trackUris);
     window.open("https://open.spotify.com/playlist/" + playlist.id, "_blank");
   },
