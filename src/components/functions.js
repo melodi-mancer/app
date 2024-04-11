@@ -22,16 +22,20 @@ export default class functions extends React.Component {
     this.timer = null;
     this.artists = null;
     this.tracks = null;
-    this.userGenre = spotifyHelper.getUserTopGenre("short_term").then((value) => {
-      this.setState({mpg:(value)});
-  });
-  this.artistGenre = spotifyHelper.getUserTopArtistGenre("medium_term").then((value) => {
-    this.setState({artistmpg:(value)});
-});
-
 
     this.artistInput = React.createRef();
     this.trackInput = React.createRef();
+  }
+
+  async componentDidMount() {
+
+      this.userGenre = spotifyHelper.getUserTopGenre("short_term").then((value) => {
+        this.state.mpg = value;
+        });
+        
+      this.artistGenre = spotifyHelper.getUserTopArtistGenre("medium_term").then((value) => {
+          this.state.artistmpg = value;
+        });
   }
 
   handleArtistInput = (e) => {
