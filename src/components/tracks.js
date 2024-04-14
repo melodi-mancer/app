@@ -4,12 +4,16 @@ import spotifyHelper from "../spotifyHelper";
 export default class tracks extends React.Component {
   state = {
     loading: true,
+    runningTime: 0,
   };
 
   async componentDidMount() {
     this.state.loading = false;
   }
 
+  setRunningTime = (event) => {
+    this.setState({runningTime:(event.target.value)});
+      };
 
   render() {
     if (this.props.data) {
@@ -17,11 +21,17 @@ export default class tracks extends React.Component {
         <div className="results">
           <div className="funcs">
             <button onClick={(e) => tracks.clearData()}>Go back</button>
-            <button onClick={(e) => spotifyHelper.createPlaylist()}>
+            <button onClick={(e) => spotifyHelper.createPlaylist(this.state.runningTime)}>
               Create a Playlist
             </button>
             {/* <span>listing {this.props.data.tracks.length} recommended tracks</span> */}
           </div>
+          <br></br>
+          <div className="funcs">
+            Playlist Duration (minutes):<input name="duration" onChange={this.setRunningTime}
+            />
+          </div>
+
           <div className="tracks">
             <ul>
               {this.props.data.tracks.map((track) => (
