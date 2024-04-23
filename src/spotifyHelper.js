@@ -132,8 +132,7 @@ getUserTopArtistGenre: async function(timeRange)
    
   
   //Creates container array (which we might not need),filters the object array and update genre information on track objects from the artist information 
-  var genreTracks = [];
-  tracksArtists.forEach((tracksArtist) => 
+   tracksArtists.forEach((tracksArtist) => 
     {
       if (tracksArtist.genres[0])
       {
@@ -215,13 +214,49 @@ getUserTopArtistGenre: async function(timeRange)
     window.location.reload();
   },
 
-  createPlaylist: async function () {
+  createPlaylist: async function (runningTime) {
     const currentDate = new Date();
     let profile = await spotifyClient.currentUser.profile();
     let playlist = await spotifyClient.playlists.createPlaylist(profile.id, { name: `Melodimancer: ${currentDate.toISOString()} `, public: false});
+    
+    //if user gave input for playlist running time
+    if (runningTime > 0)
+    {
+      let allTracksUris = [];
+      var allTracks = JSON.parse(localStorage.getItem("spotify-data")).tracks.map((track) => (
+        {id: track.uri, time: track.duration_ms}
+      ));
+      
+      var sum = 0;
+      allTracks.forEach((tracky) =>
+      {
+        //if the sum of the playlist running time is less than the provided wish for duration (+1 minute for slack) add a track to the playlist
+        if (sum < ((runningTime * 60000) + 60000))
+        {
+            allTracksUris.push(tracky);
+        }
 
-    var trackUris = JSON.parse(localStorage.getItem("spotify-data")).tracks.map((t) => t.uri);
+        sum = allTracksUris.reduce(
+          (a, b) => a + b.time,
+          0,
+        );
 
+        //if the added track makes the playlist exceed the wish for duration remove the track again
+        if (sum > ((runningTime * 60000) + 60000))
+        {
+            allTracksUris.pop();
+        }
+      });
+      var trackUris = allTracksUris.map((t) => t.id);
+
+    }
+    //If user didn't give input for playlist running time - keep it simple
+    else
+    { 
+      var trackUris = JSON.parse(localStorage.getItem("spotify-data")).tracks.map((t) => t.uri);
+    }
+    
+    //build spotify playlist
     await spotifyClient.playlists.addItemsToPlaylist(playlist.id, trackUris);
     window.open("https://open.spotify.com/playlist/" + playlist.id, "_blank");
   },
