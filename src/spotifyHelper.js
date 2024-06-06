@@ -102,6 +102,32 @@ getUserTopArtistGenre: async function(timeRange)
   return mostOcc;
 },
 
+getRandomGenre: async function(timeRange)
+{
+  //Method for finding user's top genre based on most played tracks
+
+  let genreList = [];
+  let tracksArtists = await this.getUserTopTracksArtists(timeRange);
+    
+    //Save genres to list. Only selecting first genre for now
+    tracksArtists.forEach((tracksArtist) => 
+    {
+      if (tracksArtist.genres[0])
+      {
+      genreList.push(tracksArtist.genres[0]);
+      //genreList.push(tracksArtist.genres[1]);
+      //genreList.push(tracksArtist.genres[2]);
+      //genreList.push(tracksArtist.genres[3]);
+      }
+    });
+  
+  
+ //Find most occurring genre 
+ const random = Math.floor(Math.random() * genreList.length);
+ return (random, genreList[random]);
+},
+
+
   filterTracksOnGenre: async function(timeRange,genre)
   {
 
