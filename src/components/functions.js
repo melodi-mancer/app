@@ -18,6 +18,7 @@ export default class functions extends React.Component {
       genre: "",
       mpg: "",
       artistmpg:"",
+      rdg:"",
     };
     this.timer = null;
     this.artists = null;
@@ -35,6 +36,9 @@ export default class functions extends React.Component {
         
       this.artistGenre = spotifyHelper.getUserTopArtistGenre("medium_term").then((value) => {
           this.state.artistmpg = value;
+        });
+        this.randomGenre = spotifyHelper.getRandomGenre("medium_term").then((value) => {
+          this.state.rdg = value;
         });
   }
 
@@ -119,6 +123,10 @@ export default class functions extends React.Component {
       let mostPlayedArtistGenre = this.state.artistmpg;
       functions.getbyGenreTracks("medium_term",mostPlayedArtistGenre);
     };
+    getRandomAutoRecked = () => {
+      let randomGenre = this.state.rdg;
+      functions.getbyGenreTracks("medium_term",randomGenre);
+    };
 
 
   render() {
@@ -202,6 +210,12 @@ export default class functions extends React.Component {
                 Get recommendations based on genre of most played artists: {this.state.artistmpg}
               </button>
             </div>
+            <div className="funcs">
+              <button onClick={this.getRandomAutoRecked}>
+                Get recommendations based on random genre: {this.state.rdg}
+              </button>
+            </div>
+            
           </Fragment>
         ) : (
           ""
